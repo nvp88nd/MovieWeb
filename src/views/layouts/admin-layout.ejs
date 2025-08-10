@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title || 'Admin Dashboard' %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .sidebar .nav-link {
+            color: #adb5bd;
+        }
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background-color: #495057;
+        }
+
+        .main-content {
+            flex: 1;
+            background-color: #f8f9fa;
+        }
+
+        .admin-header {
+            background-color: white;
+            border-bottom: 1px solid #dee2e6;
+            padding: 10px 20px;
+        }
+
+        .sidebar .collapse .nav-link {
+            padding-left: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .sidebar .collapse .nav-link:hover {
+            background-color: #495057;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar d-flex flex-column p-3">
+        <a href="/" class="text-decoration-none">
+            <h3 class="text-primary fw-bold mb-2 mb-md-0">My<span class="text-danger">Movie</span></h3>
+        </a>
+        <ul class="nav nav-pills flex-column mb-auto">
+
+            <!-- Dashboard -->
+            <li class="nav-item">
+                <a href="/admin/dashboard" class="nav-link">
+                    <i class="fa fa-home me-2"></i> Dashboard
+                </a>
+            </li>
+
+            <!-- Menu cha: Phim -->
+            <li>
+                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                    href="#movieMenu" role="button" aria-expanded="false">
+                    <span><i class="fa fa-table me-2"></i> Phim</span>
+                    <i class="fa fa-chevron-down small"></i>
+                </a>
+                <div class="collapse" id="movieMenu">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
+                        <li><a href="/admin/movies/add" class="nav-link">Thêm phim</a></li>
+                        <li><a href="/admin/movies" class="nav-link">Liệt kê phim</a></li>
+                        <li><a href="/admin/movies/sort" class="nav-link">Sắp xếp phim</a></li>
+                        <li><a href="/admin/movies/leech" class="nav-link">Leech phim</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Menu cha: Thể loại -->
+            <li>
+                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                    href="#categoryMenu" role="button" aria-expanded="false">
+                    <span><i class="fa fa-tags me-2"></i> Thể loại</span>
+                    <i class="fa fa-chevron-down small"></i>
+                </a>
+                <div class="collapse" id="categoryMenu">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
+                        <li><a href="/admin/categories/add" class="nav-link">Thêm thể loại</a></li>
+                        <li><a href="/admin/categories" class="nav-link">Liệt kê thể loại</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Menu cha: Quốc gia -->
+            <li>
+                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                    href="#countryMenu" role="button" aria-expanded="false">
+                    <span><i class="fa fa-globe me-2"></i> Quốc gia</span>
+                    <i class="fa fa-chevron-down small"></i>
+                </a>
+                <div class="collapse" id="countryMenu">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
+                        <li><a href="/admin/countries/add" class="nav-link">Thêm quốc gia</a></li>
+                        <li><a href="/admin/countries" class="nav-link">Liệt kê quốc gia</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Menu cha: Người dùng -->
+            <li>
+                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                    href="#userMenu" role="button" aria-expanded="false">
+                    <span><i class="fa fa-users me-2"></i> Người dùng</span>
+                    <i class="fa fa-chevron-down small"></i>
+                </a>
+                <div class="collapse" id="userMenu">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
+                        <li><a href="/admin/users" class="nav-link">Danh sách người dùng</a></li>
+                        <li><a href="/admin/users/stats" class="nav-link">Thống kê truy cập</a></li>
+                    </ul>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+
+
+
+    <div class="main-content d-flex flex-column">
+        <header class="admin-header d-flex justify-content-between align-items-center">
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search">
+                <button class="btn btn-outline-primary" type="submit"><i class="fa fa-search"></i></button>
+            </form>
+            <div>
+                <span class="me-3">Admin</span>
+                <a href="/logout" class="btn btn-sm btn-outline-danger"><i class="fa fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </header>
+
+        <main class="p-4">
+            <%- body %>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

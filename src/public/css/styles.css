@@ -1,0 +1,84 @@
+.card-img-top {
+    object-fit: cover;
+    height: 220px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: white;
+    background-color: black;
+}
+
+.container {
+    max-width: 1080px;
+    background-color: #2b2b2b;
+}
+
+.bg-my-web {
+    background-color: #2b2b2b !important;
+}
+
+.logo span {
+    color: #e61b72;
+}
+
+.header .search {
+    padding: 5px;
+}
+
+.ads img {
+    width: 100%;
+    margin: 5px 0;
+}
+
+.tabs .btn {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.btn.red {
+    background: #d33;
+}
+
+.btn.blue {
+    background: #3498db;
+}
+
+.movies {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.movie {
+    background: #1e1e1e;
+    padding: 5px;
+    position: relative;
+}
+
+.movie .ep {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 2px 5px;
+    font-size: 12px;
+}
+
+.movie img {
+    width: 100%;
+    height: auto;
+}
+
+.movie .title {
+    margin-top: 5px;
+}
+
+.movie .score {
+    font-size: 12px;
+    color: #f39c12;
+}

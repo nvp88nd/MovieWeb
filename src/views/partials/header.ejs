@@ -1,0 +1,37 @@
+<header class="mb-4 pt-3">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-2">
+        <a href="/" class="text-decoration-none">
+            <h1 class="text-primary fw-bold mb-2 mb-md-0">My<span class="text-danger">Movie</span></h1>
+        </a>
+        <input type="text" class="form-control w-100 mx-5 mb-2" placeholder="Nhập từ khóa...">
+        <div class="dropdown">
+            <button class="nav-link text-dark dropdown-toggle me-4 btn-dropdown text-white" type="button"
+                id="accountDropdown" data-bs-toggle="dropdown">
+                👤 Tài khoản
+            </button>
+
+            <% if (user) { %>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/profile">Hồ sơ</a></li>
+
+                    <% if (user.role==='admin' ) { %>
+                        <li><a class="dropdown-item" href="/admin/dashboard">Quản lý</a></li>
+                        <% } %>
+
+                            <li><a class="dropdown-item" href="/favorites">Phim đã lưu</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+                </ul>
+                <% } else { %>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/login">Đăng nhập</a></li>
+                        <li><a class="dropdown-item" href="/register">Đăng ký</a></li>
+                    </ul>
+                    <% } %>
+        </div>
+
+    </div>
+    <hr />
+</header>

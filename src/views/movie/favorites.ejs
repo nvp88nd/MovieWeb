@@ -1,0 +1,70 @@
+<div class="row g-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0">Phim đã lưu</h5>
+        <div>
+            <button class="btn btn-danger btn-sm me-2">Anime</button>
+            <button class="btn btn-primary btn-sm">CNA</button>
+        </div>
+    </div>
+    <% for(let i=0; i < movies.length; i++) { %>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+            <a href="/movie/<%= movies[i].slug %>" class="card bg-black text-white h-100  text-decoration-none">
+                <div class="position-relative">
+                    <div class="card-img-top ratio ratio-16x9">
+                        <img src="<%= movies[i].thumb_url %>" alt="...">
+                    </div>
+                    <div class="position-absolute top-0 start-0 bg-dark px-2 py-1 m-1 small">
+                        <%= movies[i].Episodes.length %>/??
+                    </div>
+                    <div class="text-warning position-absolute bottom-0 end-0 bg-dark px-2 py-1 m-1 fw-bold small">
+                        9.0
+                    </div>
+                </div>
+                <div class="card-body p-2 d-inline-block">
+                    <h6 class="card-title mb-1 text-truncate">
+                        <%= movies[i].title %>
+                    </h6>
+                </div>
+            </a>
+        </div>
+        <% } %>
+</div>
+
+<!-- Pagination -->
+<div class="pagination d-flex align-items-center justify-content-center mt-4 gap-2">
+    <a class="btn btn-sm btn-secondary" href="?page=1">Đầu</a>
+    <div id="pagination" data-total-pages="<%= totalPages %>"></div>
+    <% pages.forEach(p=> { %>
+        <% if (p==='...' ) { %>
+            <span class="px-2">...</span>
+            <% } else if (p===currentPage) { %>
+                <span class="btn btn-sm btn-success">
+                    <%= p %>
+                </span>
+                <% } else { %>
+                    <a class="btn btn-sm btn-dark" href="?page=<%= p %>">
+                        <%= p %>
+                    </a>
+                    <% } %>
+                        <% }) %>
+
+                            <a class="btn btn-sm btn-secondary" href="?page=<%= totalPages %>">Cuối</a>
+
+                            <input type="number" id="goPage" min="1" max="<%= totalPages %>"
+                                placeholder="Nhập page cần đến" style="width: 120px; height: 32px;">
+
+                            <button class="btn btn-sm btn-danger" onclick="goToPage()">GO</button>
+</div>
+
+<script>
+    const totalPages = parseInt(document.getElementById('pagination').dataset.totalPages);
+
+    function goToPage() {
+        const page = parseInt(document.getElementById('goPage').value);
+        if (page && page >= 1 && page <= totalPages) {
+            window.location.href = '?page=' + page;
+        } else {
+            alert("Vui lòng nhập số trang hợp lệ!");
+        }
+    }
+</script>

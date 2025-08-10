@@ -1,0 +1,41 @@
+<div class="mx-auto" style="max-width: 400px;">
+    <div class="card-body">
+        <h3 class="card-title mb-4">Đăng ký tài khoản</h3>
+
+        <% if (error) { %>
+            <div class="alert alert-danger">
+                <%= error %>
+            </div>
+            <% } %>
+
+                <form action="/register" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Tên đăng nhập</label>
+                        <input type="text" name="username" class="form-control" required
+                            placeholder="Nhập tên đăng nhập của bạn">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required placeholder="Nhập email của bạn">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu</label>
+                        <input type="password" name="password" class="form-control" required
+                            placeholder="Nhập mật khẩu của bạn">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Xác nhận mật khẩu</label>
+                        <input type="password" name="confirm_password" class="form-control" required
+                            placeholder="Nhập lại mật khẩu của bạn">
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">Đăng ký</button>
+                    <div class="col-12 text-center mt-2">Đã có tài khoản?
+                        <a href="/login" class="text-white">Đăng nhập ngay!</a>
+                    </div>
+                </form>
+    </div>
+</div>
