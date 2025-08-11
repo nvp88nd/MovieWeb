@@ -15,7 +15,7 @@
         </h5>
         <div class="d-flex flex-wrap gap-2 mt-2">
             <% episodes.forEach(ep=> { %>
-                <a href="/xem-phim/<%= movie.slug %>/<%= ep.episode_name.replace('Tập ', '') %>"
+                <a href="/movie/<%= movie.slug %>/<%= ep.episode_name.replace('Tập ', '') %>"
                     class="btn btn-sm <%= ep.episode_name === currentEpisode.episode_name ? 'btn-success' : 'btn-secondary' %>"
                     style="width: 60px;">
                     <%= ep.episode_name %>
