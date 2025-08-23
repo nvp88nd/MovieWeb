@@ -3,7 +3,7 @@
         <h3 class="card-title mb-4">Hồ sơ cá nhân</h3>
 
         <% if (user) { %>
-            <div class="row">
+            <div class="d-flex flex-column justify-content-center align-items-center">
                 <div class="col-md-4 text-center">
                     <% if (user.avatar_url) { %>
                         <img src="<%= user.avatar_url %>" alt="Avatar" class="img-thumbnail" width="150">
@@ -12,18 +12,24 @@
                             <% } %>
                 </div>
                 <div class="col-md-8">
-                    <p><strong>Tên:</strong>
-                        <%= user.username %>
-                    </p>
-                    <p><strong>Email:</strong>
-                        <%= user.email %>
-                    </p>
-                    <p><strong>Vai trò:</strong> <span class="badge bg-secondary">
-                            <%= user.role %>
-                        </span></p>
-                    <p><strong>Ngày tạo:</strong>
-                        <%= new Date(user.created_at).toLocaleDateString() %>
-                    </p>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Tên người dùng</label>
+                        <input type="text" class="form-control" id="username" name="username"
+                            value="<%= user.username %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>"
+                            disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="created_at" class="form-label">Ngày tham gia</label>
+                        <input type="text" class="form-control" id="created_at" name="created_at"
+                            value="<%= new Date(user.created_at).toLocaleDateString() %>" disabled>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-primary" type="submit" id="saveBtn">Lưu</button>
                 </div>
             </div>
             <% } else { %>
@@ -31,3 +37,32 @@
                 <% } %>
     </div>
 </div>
+
+<script>
+    document.getElementById('saveBtn').addEventListener('click', function () {
+        const username = document.getElementById('username').value;
+
+        if (!username || username.trim() === '') {
+            alert('Tên người dùng không được để trống!');
+            return;
+        }
+
+        fetch('/profile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Cập nhật thành công!');
+                } else {
+                    alert('Cập nhật thất bại!');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>

@@ -3,7 +3,9 @@ const app = express();
 require('dotenv').config();
 const expressLayout = require('express-ejs-layouts');
 const cookieParser = require('cookie-parser');
+const expressSession = require('express-session');
 const jwt = require('jsonwebtoken');
+const flash = require('connect-flash');
 
 
 // Cấu hình view engine
@@ -17,6 +19,13 @@ app.use(expressLayout);
 app.set('layout', 'layouts/main');
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(expressSession({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
+app.use(flash());
 app.use((req, res, next) => {
     const token = req.cookies.token;
     if (token) {
@@ -32,6 +41,8 @@ app.use((req, res, next) => {
         res.locals.user = null;
         req.user = null;
     }
+    res.locals.success_msg = req.flash("success_msg");
+    res.locals.error_msg = req.flash("error_msg");
     next();
 });
 

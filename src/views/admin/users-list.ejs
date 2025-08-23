@@ -1,0 +1,47 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <%= title %>
+    </h1>
+</div>
+<%- include('../partials/messages') %>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tên người dùng</th>
+                <th>Email</th>
+                <th>Ngày đăng ký</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach((user,index)=> { %>
+                <tr>
+                    <td>
+                        <%= index + 1 %>
+                    </td>
+                    <td>
+                        <%= user.username %>
+                    </td>
+                    <td>
+                        <%= user.email %>
+                    </td>
+                    <td>
+                        <%= user.created_at.toLocaleDateString() %>
+                    </td>
+                    <td>
+                        <a href="/admin/user/edit/<%= user.id %>" class="btn btn-primary btn-sm">Sửa</a>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#confirmDeleteModal" data-id="<%= user.id %>"
+                            data-url="/admin/user/delete/<%= user.id %>" data-name="<%= user.username %>">
+                            Xóa
+                        </button>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+
+    <%- include('../partials/pagination', { totalPages, currentPage, pages }) %>
+        <%- include('../partials/formDelete') %>

@@ -55,7 +55,8 @@ exports.register = async (req, res) => {
 
     try {
         await authService.register({ username, email, password, avatar_url: 'images/test.jpg' });
-        res.redirect('/login');
+        req.flash('success_msg', 'Đăng ký thành công!');
+        res.redirect('/register');
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -89,6 +90,46 @@ exports.updateProfile = async (req, res) => {
         res.status(200).json(updatedUser);
     } catch (error) {
         res.status(400).json({ message: error.message });
+    }
+}
+
+exports.getChangePasswordPage = (req, res) => {
+    res.render('auth/changePassword', {
+        title: 'Change Password',
+        error: null
+    });
+}
+
+exports.changePassword = async (req, res) => {
+    const userId = req.user.id;
+    const { oldPassword, password, confirm_password } = req.body;
+
+    if (!oldPassword || !password || !confirm_password) {
+        return res.render('auth/changePassword', { error: 'Vui lòng nhập đầy đủ thông tin.' });
+    }
+    if (password !== confirm_password) {
+        return res.render('auth/changePassword', { error: 'Mật khẩu xác nhận không khớp.' });
+    }
+
+    try {
+        const user = await authRepo.getUserById(userId);
+        if (!user) {
+            return res.render('auth/changePassword', { error: 'Người dùng không tồn tại.' });
+        }
+
+        const isOldPasswordValid = await authService.login(user.email, oldPassword);
+        if (!isOldPasswordValid) {
+            return res.render('auth/changePassword', { error: 'Mật khẩu cũ không đúng.' });
+        }
+
+        const hashedPassword = await require('bcrypt').hash(password, 10);
+        await authService.updateUser(userId, { password: hashedPassword });
+
+        req.flash('success_msg', 'Đổi mật khẩu thành công!');
+        res.redirect('/changePassword');
+    } catch (error) {
+        req.flash('error_msg', error.message);
+        res.redirect('/changePassword');
     }
 }
 

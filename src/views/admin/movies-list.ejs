@@ -1,0 +1,79 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <%= title %>
+    </h1>
+    <a href="/admin/movie/add" class="btn btn-success">Thêm phim</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped" style="width: 100%;">
+        <thead>
+            <tr>
+                <th style="width: 50px;">#</th>
+                <th style="min-width: 100px;">Tên phim</th>
+                <th style="width: 80px;">Thể loại</th>
+                <th style="width: 80px;">Quốc gia</th>
+                <th style="width: 130px;">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% movies.forEach((movie,index)=> { %>
+                <tr>
+                    <td>
+                        <%= index + 1 %>
+                    </td>
+                    <td>
+                        <%= movie.title %>
+                    </td>
+                    <td>
+                        <div class="d-flex flex-column">
+                            <% movie.Genres.forEach((genre)=> { %>
+                                <span class="badge bg-secondary mb-1">
+                                    <%= genre.name %>
+                                </span>
+                                <% }) %>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex flex-column">
+                            <% movie.Countries.forEach((country)=> { %>
+                                <span class="badge bg-secondary mb-1">
+                                    <%= country.name %>
+                                </span>
+                                <% }) %>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="/admin/movie/edit/<%= movie.id %>" class="btn btn-primary btn-sm">Sửa</a>
+                        <form action="/admin/movie/delete/<%= movie.id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<div class="pagination d-flex align-items-center justify-content-center mt-4 gap-2">
+    <a class="btn btn-sm btn-secondary" href="?page=1">Đầu</a>
+    <div id="pagination" data-total-pages="<%= totalPages %>"></div>
+    <% pages.forEach(p=> { %>
+        <% if (p===currentPage) { %>
+            <span class="btn btn-sm btn-success">
+                <%= p %>
+            </span>
+            <% } else { %>
+                <a class="btn btn-sm btn-dark" href="?page=<%= p %>">
+                    <%= p %>
+                </a>
+                <% } %>
+                    <% }) %>
+                        <a class="btn btn-sm btn-secondary" href="?page=<%= totalPages %>">Cuối</a>
+
+                        <input type="number" id="goPage" min="1" max="<%= totalPages %>" placeholder="Nhập page cần đến"
+                            style="width: 120px; height: 32px;">
+                        <button class="btn btn-sm btn-danger" onclick="goToPage()">GO</button>
+</div>
+
+<script src="/js/paginate.js"></script>

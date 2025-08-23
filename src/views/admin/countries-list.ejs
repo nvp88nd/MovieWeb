@@ -1,0 +1,40 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <%= title %>
+    </h1>
+    <a href="/admin/country/add" class="btn btn-success">Thêm quốc gia</a>
+</div>
+<%- include('../partials/messages') %>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tên quốc gia</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% countrys.forEach((country,index)=> { %>
+                <tr>
+                    <td>
+                        <%= index + 1 %>
+                    </td>
+                    <td>
+                        <%= country.name %>
+                    </td>
+                    <td>
+                        <a href="/admin/country/edit/<%= country.id %>" class="btn btn-primary btn-sm">Sửa</a>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#confirmDeleteModal" data-id="<%= country.id %>"
+                            data-url="/admin/country/delete/<%= country.id %>" data-name="<%= country.name %>">
+                            Xóa
+                        </button>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+
+    <%- include('../partials/pagination', { totalPages, currentPage, pages }) %>
+        <%- include('../partials/formDelete') %>

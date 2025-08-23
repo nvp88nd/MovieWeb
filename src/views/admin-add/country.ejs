@@ -1,0 +1,9 @@
+<form action="/admin/country/add" method="POST">
+    <%- include('../partials/messages') %>
+        <div class="mb-3">
+            <label for="name" class="form-label">Tên quốc gia</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Thêm quốc gia</button>
+        <a href="/admin/countries" class="btn btn-secondary">Quay lại</a>
+</form>

@@ -1,5 +1,6 @@
 const e = require('express');
 const db = require('../models');
+const paginate = require('../helper/paginate');
 
 exports.movieInfo = async (req, res) => {
     const { slug } = req.params;
@@ -114,51 +115,22 @@ exports.favorites = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = 24;
-        const offset = (page - 1) * limit;
 
-        const { count, rows: movies } = await db.Movie.findAndCountAll({
+        const { rows: movies, currentPage, totalPages, pages } = await paginate(db.Movie, page, limit, {
             include: [{
                 model: db.SavedMovie,
                 where: { user_id: userId },
                 required: true
+            }, {
+                model: db.Episode
             }],
-            order: [['updated_at', 'DESC']],
-            limit,
-            offset,
-            distinct: true
+            order: [['updated_at', 'DESC']]
         });
 
-        for (const movie of movies) {
-            movie.Episodes = await db.Episode.findAll({
-                where: { movie_id: movie.id },
-                order: [['episode_name', 'DESC']]
-            });
-        }
-
-        const totalPages = Math.ceil(count / limit);
-
-        function getPageNumbers(current, total) {
-            const pages = [];
-            if (total <= 5) {
-                for (let i = 1; i <= total; i++) pages.push(i);
-            } else {
-                pages.push(1);
-                if (current > 3) pages.push('...');
-                const start = Math.max(2, current - 1);
-                const end = Math.min(total - 1, current + 1);
-                for (let i = start; i <= end; i++) pages.push(i);
-                if (current < total - 2) pages.push('...');
-                pages.push(total);
-            }
-            return pages;
-        }
-
-        const pages = getPageNumbers(page, totalPages);
-
         res.render('movie/favorites', {
-            title: 'Danh sách phim yêu thích',
+            title: 'Phim đã lưu',
             movies,
-            currentPage: page,
+            currentPage,
             totalPages,
             pages
         });

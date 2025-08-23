@@ -1,0 +1,21 @@
+<div class="pagination d-flex align-items-center justify-content-center mt-4 gap-2">
+    <a class="btn btn-sm btn-secondary" href="?page=1">Đầu</a>
+    <div id="pagination" data-total-pages="<%= totalPages %>"></div>
+    <% pages.forEach(p=> { %>
+        <% if (p===currentPage) { %>
+            <span class="btn btn-sm btn-success">
+                <%= p %>
+            </span>
+            <% } else { %>
+                <a class="btn btn-sm btn-dark" href="?page=<%= p %>">
+                    <%= p %>
+                </a>
+                <% } %>
+                    <% }) %>
+                        <a class="btn btn-sm btn-secondary" href="?page=<%= totalPages %>">Cuối</a>
+
+                        <input type="number" id="goPage" min="1" max="<%= totalPages %>" placeholder="Nhập page cần đến"
+                            style="width: 120px; height: 32px;">
+                        <button class="btn btn-sm btn-danger" onclick="goToPage()">GO</button>
+</div>
+<script src="/js/paginate.js"></script>

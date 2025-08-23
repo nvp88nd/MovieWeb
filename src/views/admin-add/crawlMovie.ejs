@@ -1,0 +1,18 @@
+<form action="/admin/movie/crawl" method="POST">
+    <%- include('../partials/messages') %>
+        <div class="mb-3">
+            <label for="genre" class="form-label">Nguồn</label>
+            <select class="form-select" id="source" name="source" required>
+                <option value="ophim">Ophim8</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="title" class="form-label">Tiêu đề phim</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Đường dẫn</label>
+            <input type="text" class="form-control" id="slug" name="slug" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Thêm phim</button>
+</form>

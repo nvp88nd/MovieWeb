@@ -53,92 +53,120 @@
             background-color: #495057;
             color: white;
         }
+
+        .sidebar .offcanvas-body {
+            padding: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .offcanvas-md {
+                position: static;
+                transform: none !important;
+                visibility: visible !important;
+                background-color: #343a40;
+                width: 250px !important;
+                max-width: 250px !important;
+                color: white;
+                height: 100vh;
+                overflow-y: auto;
+                box-shadow: none;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <div class="sidebar d-flex flex-column p-3">
-        <a href="/" class="text-decoration-none">
-            <h3 class="text-primary fw-bold mb-2 mb-md-0">My<span class="text-danger">Movie</span></h3>
-        </a>
-        <ul class="nav nav-pills flex-column mb-auto">
+    <div class="sidebar offcanvas offcanvas-start offcanvas-md d-flex flex-column p-3" tabindex="-1"
+        id="sidebarOffcanvas">
+        <div class="offcanvas-header d-md-none">
+            <h5 class="offcanvas-title">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0 d-flex flex-column">
+            <a href="/" class="text-decoration-none p-3 d-block">
+                <h3 class="text-primary fw-bold mb-2 mb-md-0">My<span class="text-danger">Movie</span></h3>
+            </a>
+            <ul class="nav nav-pills flex-column mb-auto">
 
-            <!-- Dashboard -->
-            <li class="nav-item">
-                <a href="/admin/dashboard" class="nav-link">
-                    <i class="fa fa-home me-2"></i> Dashboard
-                </a>
-            </li>
+                <!-- Dashboard -->
+                <li class="nav-item">
+                    <a href="/admin/dashboard" class="nav-link">
+                        <i class="fa fa-home me-2"></i> Tổng quan
+                    </a>
+                </li>
 
-            <!-- Menu cha: Phim -->
-            <li>
-                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
-                    href="#movieMenu" role="button" aria-expanded="false">
-                    <span><i class="fa fa-table me-2"></i> Phim</span>
-                    <i class="fa fa-chevron-down small"></i>
-                </a>
-                <div class="collapse" id="movieMenu">
-                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
-                        <li><a href="/admin/movies/add" class="nav-link">Thêm phim</a></li>
-                        <li><a href="/admin/movies" class="nav-link">Liệt kê phim</a></li>
-                        <li><a href="/admin/movies/sort" class="nav-link">Sắp xếp phim</a></li>
-                        <li><a href="/admin/movies/leech" class="nav-link">Leech phim</a></li>
-                    </ul>
-                </div>
-            </li>
+                <!-- Menu cha: Phim -->
+                <li>
+                    <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                        href="#movieMenu" role="button" aria-expanded="false">
+                        <span><i class="fa fa-table me-2"></i> Phim</span>
+                        <i class="fa fa-chevron-down small"></i>
+                    </a>
+                    <div class="collapse" id="movieMenu">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
+                            <li><a href="/admin/movies" class="nav-link">Danh sách phim</a></li>
+                            <li><a href="/admin/movie/crawl" class="nav-link">Crawl phim</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-            <!-- Menu cha: Thể loại -->
-            <li>
-                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
-                    href="#categoryMenu" role="button" aria-expanded="false">
-                    <span><i class="fa fa-tags me-2"></i> Thể loại</span>
-                    <i class="fa fa-chevron-down small"></i>
-                </a>
-                <div class="collapse" id="categoryMenu">
-                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
-                        <li><a href="/admin/categories/add" class="nav-link">Thêm thể loại</a></li>
-                        <li><a href="/admin/categories" class="nav-link">Liệt kê thể loại</a></li>
-                    </ul>
-                </div>
-            </li>
+                <!-- Menu cha: Thể loại -->
+                <li>
+                    <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                        href="#categoryMenu" role="button" aria-expanded="false">
+                        <span><i class="fa fa-tags me-2"></i> Thể loại</span>
+                        <i class="fa fa-chevron-down small"></i>
+                    </a>
+                    <div class="collapse" id="categoryMenu">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
+                            <li><a href="/admin/genre/add" class="nav-link">Thêm thể loại</a></li>
+                            <li><a href="/admin/genres" class="nav-link">Danh sách thể loại</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-            <!-- Menu cha: Quốc gia -->
-            <li>
-                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
-                    href="#countryMenu" role="button" aria-expanded="false">
-                    <span><i class="fa fa-globe me-2"></i> Quốc gia</span>
-                    <i class="fa fa-chevron-down small"></i>
-                </a>
-                <div class="collapse" id="countryMenu">
-                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
-                        <li><a href="/admin/countries/add" class="nav-link">Thêm quốc gia</a></li>
-                        <li><a href="/admin/countries" class="nav-link">Liệt kê quốc gia</a></li>
-                    </ul>
-                </div>
-            </li>
+                <!-- Menu cha: Quốc gia -->
+                <li>
+                    <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                        href="#countryMenu" role="button" aria-expanded="false">
+                        <span><i class="fa fa-globe me-2"></i> Quốc gia</span>
+                        <i class="fa fa-chevron-down small"></i>
+                    </a>
+                    <div class="collapse" id="countryMenu">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
+                            <li><a href="/admin/country/add" class="nav-link">Thêm quốc gia</a></li>
+                            <li><a href="/admin/countries" class="nav-link">Danh sách quốc gia</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-            <!-- Menu cha: Người dùng -->
-            <li>
-                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
-                    href="#userMenu" role="button" aria-expanded="false">
-                    <span><i class="fa fa-users me-2"></i> Người dùng</span>
-                    <i class="fa fa-chevron-down small"></i>
-                </a>
-                <div class="collapse" id="userMenu">
-                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
-                        <li><a href="/admin/users" class="nav-link">Danh sách người dùng</a></li>
-                        <li><a href="/admin/users/stats" class="nav-link">Thống kê truy cập</a></li>
-                    </ul>
-                </div>
-            </li>
+                <!-- Menu cha: Người dùng -->
+                <li>
+                    <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                        href="#userMenu" role="button" aria-expanded="false">
+                        <span><i class="fa fa-users me-2"></i> Người dùng</span>
+                        <i class="fa fa-chevron-down small"></i>
+                    </a>
+                    <div class="collapse" id="userMenu">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
+                            <li><a href="/admin/users" class="nav-link">Danh sách người dùng</a></li>
+                            <li><a href="#" class="nav-link">Truy cập</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-        </ul>
+            </ul>
+        </div>
     </div>
 
 
 
     <div class="main-content d-flex flex-column">
         <header class="admin-header d-flex justify-content-between align-items-center">
+            <button class="btn btn-outline-secondary d-md-none" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
+                <i class="fa fa-bars"></i>
+            </button>
             <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search">
                 <button class="btn btn-outline-primary" type="submit"><i class="fa fa-search"></i></button>
