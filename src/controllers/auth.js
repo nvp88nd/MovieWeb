@@ -28,7 +28,8 @@ exports.login = async (req, res) => {
         });
         res.redirect('/');
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        req.flash('error_msg', error.message);
+        res.redirect('/login');
     }
 }
 
@@ -58,7 +59,8 @@ exports.register = async (req, res) => {
         req.flash('success_msg', 'Đăng ký thành công!');
         res.redirect('/register');
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        req.flash('error_msg', error.message);
+        res.redirect('/register');
     }
 }
 

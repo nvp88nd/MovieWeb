@@ -8,28 +8,29 @@
             <button class="btn btn-primary btn-sm">CNA</button>
         </div>
     </div>
-    <% for(let i=0; i < movies.length; i++) { %>
-        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-            <a href="/movie/<%= movies[i].slug %>" class="card bg-black text-white h-100  text-decoration-none">
-                <div class="position-relative">
-                    <div class="card-img-top ratio ratio-16x9">
-                        <img src="<%= movies[i].thumb_url %>" alt="...">
+    <%- include('../partials/messages') %>
+        <% for(let i=0; i < movies.length; i++) { %>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <a href="/movie/<%= movies[i].slug %>" class="card bg-black text-white h-100  text-decoration-none">
+                    <div class="position-relative">
+                        <div class="card-img-top ratio ratio-16x9">
+                            <img src="<%= movies[i].thumb_url %>" alt="...">
+                        </div>
+                        <div class="position-absolute top-0 start-0 bg-dark px-2 py-1 m-1 small">
+                            <%= movies[i].Episodes?.length || 0 %>/??
+                        </div>
+                        <div class="text-warning position-absolute bottom-0 end-0 bg-dark px-2 py-1 m-1 fw-bold small">
+                            9.0
+                        </div>
                     </div>
-                    <div class="position-absolute top-0 start-0 bg-dark px-2 py-1 m-1 small">
-                        <%= movies[i].Episodes?.length || 0 %>/??
+                    <div class="card-body p-2 d-inline-block">
+                        <h6 class="card-title mb-1 text-truncate">
+                            <%= movies[i].title %>
+                        </h6>
                     </div>
-                    <div class="text-warning position-absolute bottom-0 end-0 bg-dark px-2 py-1 m-1 fw-bold small">
-                        9.0
-                    </div>
-                </div>
-                <div class="card-body p-2 d-inline-block">
-                    <h6 class="card-title mb-1 text-truncate">
-                        <%= movies[i].title %>
-                    </h6>
-                </div>
-            </a>
-        </div>
-        <% } %>
+                </a>
+            </div>
+            <% } %>
 </div>
 
 <!-- Pagination -->

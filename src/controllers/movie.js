@@ -36,7 +36,8 @@ exports.movieInfo = async (req, res) => {
             isSaved
         });
     } catch (err) {
-        res.status(500).send('Error: ' + err.message);
+        req.flash('error_msg', err.message || 'Lỗi khi tải trang phim');
+        res.redirect('/');
     }
 }
 
@@ -66,7 +67,8 @@ exports.watchMovie = async (req, res) => {
             episodes
         });
     } catch (err) {
-        res.status(500).send('Lỗi server');
+        req.flash('error_msg', err.message || 'Lỗi khi tải trang xem phim');
+        res.redirect('/');
     }
 };
 
@@ -104,7 +106,6 @@ exports.addToFavorites = async (req, res) => {
         });
 
     } catch (err) {
-        console.error(err);
         res.status(500).json({ success: false, message: 'Error: ' + err.message });
     }
 };
@@ -135,7 +136,7 @@ exports.favorites = async (req, res) => {
             pages
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err.message);
+        req.flash('error_msg', err.message || 'Lỗi khi tải trang phim đã lưu');
+        res.redirect('/');
     }
 };
