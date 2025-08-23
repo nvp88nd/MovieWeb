@@ -52,8 +52,7 @@ app.use('/', webRoutes);
 
 
 // Khởi động server
-// const PORT = process.env.PORT || 8081;
-// app.listen(PORT, () => {
-//     console.log(`Server chạy tại http://localhost:${PORT}`);
-// });
-module.exports = app;
+const PORT = process.env.PORT || 8081;
+app.listen(PORT, () => {
+    console.log(`Server chạy tại http://localhost:${PORT}`);
+});
