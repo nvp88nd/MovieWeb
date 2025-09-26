@@ -1,4 +1,5 @@
 const db = require('../models');
+const axios = require('axios');
 
 exports.getAllMovies = async () => {
     return await db.Movie.findAll();
@@ -7,6 +8,35 @@ exports.getAllMovies = async () => {
 exports.getMovieById = async (id) => {
     return await db.Movie.findByPk(id);
 };
+
+exports.getMovieBySlug = async (slug) => {
+    try {
+        return await db.Movie.findOne({
+            where: { slug }
+        });
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.addMovieFromOphim = async (slug) => {
+    try {
+        const detailUrl = `https://ophim1.com/phim/${slug}`;
+        const response = await axios.get(detailUrl, {
+            headers: { 'User-Agent': 'Mozilla/5.0' }
+        });
+        if (response.data.status == 'false') {
+            throw new Error('Đường dẫn phim không đúng');
+        }
+        const movieData = response.data.movie;
+        return await this.crawlMovie(movieData);
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            throw new Error('Đường dẫn phim không đúng');
+        }
+        throw error;
+    }
+}
 
 exports.crawlMovie = async (movieData) => {
     try {
@@ -20,7 +50,9 @@ exports.crawlMovie = async (movieData) => {
                 thumb_url: movieData.thumb_url || '',
                 poster_url: movieData.poster_url || '',
                 description: movieData.content || '',
-                status: movieData.status || ''
+                status: movieData.status || '',
+                created_at: movieData?.created?.time || new Date(),
+                updated_at: movieData?.modified?.time || new Date()
             }
         });
 
@@ -66,7 +98,9 @@ exports.updateMovie = async (movieId, movieData) => {
             thumb_url: movieData.thumb_url || '',
             poster_url: movieData.poster_url || '',
             description: movieData.content || '',
-            status: movieData.status || ''
+            status: movieData.status || '',
+            created_at: movie.created_at,
+            updated_at: movieData?.modified?.time || new Date()
         });
 
         // 2. Cập nhật thể loại
@@ -123,3 +157,68 @@ exports.updateMovie = async (movieId, movieData) => {
         throw error;
     }
 }
+
+exports.updateMovieV2 = async (movieId, movieData) => {
+    try {
+        const movie = await db.Movie.findByPk(movieId, {
+            include: [db.Genre, db.Country]
+        });
+        if (!movie) throw new Error('Movie not found');
+
+        // 1. Cập nhật thông tin phim
+        await movie.update({
+            title: movieData.name,
+            origin_name: movieData.origin_name,
+            year: movieData.year || null,
+            thumb_url: movieData.thumb_url || '',
+            poster_url: movieData.poster_url || '',
+            description: movieData.content || '',
+            status: movieData.status || '',
+            created_at: movie.created_at,
+            updated_at: movieData?.modified?.time || new Date()
+        });
+
+        // 2. Cập nhật thể loại
+        if (Array.isArray(movieData.category)) {
+            const genres = [];
+            for (const genre of movieData.category) {
+                const [g] = await db.Genre.findOrCreate({
+                    where: { slug: genre.slug },
+                    defaults: { name: genre.name }
+                });
+                genres.push(g);
+            }
+            await movie.setGenres(genres);
+        }
+
+        // 3. Cập nhật quốc gia
+        if (Array.isArray(movieData.country)) {
+            const countries = [];
+            for (const country of movieData.country) {
+                const [c] = await db.Country.findOrCreate({
+                    where: { slug: country.slug },
+                    defaults: { name: country.name }
+                });
+                countries.push(c);
+            }
+            await movie.setCountries(countries);
+        }
+
+        return movie;
+    } catch (error) {
+        console.error('Error updating movie:', error);
+        throw error;
+    }
+}
+
+exports.deleteMovie = async (id) => {
+    if (!id) {
+        throw new Error('ID thể loại không hợp lệ');
+    }
+    try {
+        const deletedMovie = await db.Movie.destroy({ where: { id } });
+        return deletedMovie;
+    } catch (error) {
+        throw new Error(error.message || 'Lỗi khi xóa thể loại');
+    }
+};

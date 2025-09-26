@@ -49,6 +49,11 @@ app.use((req, res, next) => {
 // Routes
 const webRoutes = require('./routes/web');
 app.use('/', webRoutes);
+app.use((req, res, next) => {
+    res.status(404).render('error', {
+        title: '404 NOT FOUND'
+    });
+});
 
 
 // Khởi động server

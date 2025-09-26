@@ -70,4 +70,7 @@ async function syncAllMovies() {
     }
 }
 
-syncAllMovies();
+module.exports = {
+    syncEpisodes,
+    syncAllMovies
+};

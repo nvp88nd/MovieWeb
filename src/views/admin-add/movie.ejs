@@ -1,0 +1,129 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <%= title %>
+    </h1>
+</div>
+<%- include('../partials/messages') %>
+
+    <div class="table-responsive">
+        <table class="table table-striped" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">#</th>
+                    <th style="min-width: 150px;">Phim</th>
+                    <th style="width: 120px;">Tên gốc</th>
+                    <th style="width: 80px;">Năm</th>
+                    <th style="width: 150px;">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (items && items.length> 0) { %>
+                    <% items.forEach((movie, index)=> { %>
+                        <tr>
+                            <td>
+                                <%= (pagination.currentPage - 1) * pagination.totalItemsPerPage + index + 1 %>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="<%= pathImage + movie.thumb_url %>" alt="<%= movie.name %>"
+                                        class="img-fluid me-2" style="height: 100px; width: 70px; object-fit: cover;">
+                                    <%= movie.name %>
+                                </div>
+                            </td>
+                            <td>
+                                <%= movie.origin_name || '---' %>
+                            </td>
+                            <td>
+                                <%= movie.year || '---' %>
+                            </td>
+                            <td>
+                                <button class="btn btn-info btn-sm btn-detail" data-id="<%= movie.slug %>">Chi
+                                    tiết</button>
+                                <a href="/admin/<%= movie.slug %>/episodes" class="btn btn-warning btn-sm">Xem tập</a>
+                                <form action="/admin/movie/leech/<%= movie.slug %>" method="POST">
+                                    <button type="submit" class="btn btn-success btn-sm">Thêm phim</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="5" class="text-center">Không có phim nào.</td>
+                                </tr>
+                                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <%- include('../partials/pagination', { totalPages: pagination.totalPages, currentPage: pagination.currentPage,
+        pages }) %>
+
+        <!-- Modal -->
+        <div class="modal fade" id="movieDetailModal" tabindex="-1" aria-labelledby="movieDetailModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Chi tiết phim</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body row">
+                        <div class="col-md-3">
+                            <img src="" alt="" class="img-fluid object-fit-cover" id="detailThumb">
+                        </div>
+                        <div class="col-md-9">
+                            <p><strong>Tên phim:</strong> <span id="detailName"></span></p>
+                            <p><strong>Tên gốc:</strong> <span id="detailOriginName"></span></p>
+                            <p><strong>Trạng thái:</strong> <span id="detailStatus"></span></p>
+                            <p><strong>Số tập:</strong> <span id="detailEpisodes"></span></p>
+                            <p><strong>Năm phát hành:</strong> <span id="detailYear"></span></p>
+                            <p><strong>Thể loại:</strong> <span id="detailCategory"></span></p>
+                            <p><strong>Quốc gia:</strong> <span id="detailCountry"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const buttons = document.querySelectorAll('.btn-detail');
+                buttons.forEach(button => {
+                    button.addEventListener('click', async function () {
+                        const movieSlug = this.getAttribute('data-id');
+                        try {
+                            const response = await fetch(`https://ophim1.com/phim/${movieSlug}`, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+                            if (response.status === 500) {
+                                alert('Đã xảy ra lỗi khi tải chi tiết phim.');
+                                return;
+                            }
+                            if (!response.ok) {
+                                alert('Không thể tải chi tiết phim.');
+                                return;
+                            }
+                            const data = await response.json();
+                            const movie = data.movie;
+                            const episodes = data.episodes?.[0]?.server_data || [];
+                            document.getElementById('detailThumb').src = movie.thumb_url || '';
+                            document.getElementById('detailName').textContent = movie.name || 'Không rõ';
+                            document.getElementById('detailOriginName').textContent = movie.origin_name || 'Không rõ';
+                            document.getElementById('detailStatus').textContent = movie.status === 'ongoing' ? 'Đang chiếu' : movie.status === 'completed' ? 'Hoàn thành' : 'Chưa rõ';
+                            document.getElementById('detailEpisodes').textContent = episodes.length || 'Chưa rõ';
+                            document.getElementById('detailYear').textContent = movie.year || 'Không rõ';
+                            document.getElementById('detailCategory').textContent = movie.category && movie.category.length > 0 ? movie.category.map(g => g.name).join(', ') : 'Chưa có';
+                            document.getElementById('detailCountry').textContent = movie.country && movie.country.length > 0 ? movie.country.map(c => c.name).join(', ') : 'Chưa có';
+                            const movieDetailModal = new bootstrap.Modal(document.getElementById('movieDetailModal'));
+                            movieDetailModal.show();
+                        } catch (error) {
+                            console.error('Error fetching movie details:', error);
+                            alert('Đã xảy ra lỗi khi tải chi tiết phim.');
+                        }
+                    });
+                });
+            });
+        </script>

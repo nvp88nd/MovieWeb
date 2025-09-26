@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { homePage } = require('../controllers/home');
+const homeController = require('../controllers/home');
 const movieController = require('../controllers/movie');
 const authController = require('../controllers/auth');
 const adminController = require('../controllers/admin');
@@ -11,13 +11,16 @@ const authenticateToken = require('../middlewares/authenticateToken');
 const adminAuthToken = require('../middlewares/adminAuthToken');
 
 // Home controller routes
-router.get('/', homePage);
+router.get('/', homeController.homePage);
+router.get('/search', homeController.searchMovies);
 
 // Movie controller routes
 router.get('/movie/:slug', movieController.movieInfo);
 router.get('/movie/:slug/:tap', movieController.watchMovie);
 router.post('/saveMovie/:movieId', authenticateToken, movieController.addToFavorites);
 router.get('/favorites', authenticateToken, movieController.favorites);
+router.post('/comments', authenticateToken, movieController.postComment);
+router.get('/comments', movieController.getComments);
 
 // Auth controller routes
 router.post('/login', authController.login);
@@ -51,8 +54,17 @@ router.get('/admin/dashboard', adminAuthToken, adminController.dashboard);
 router.get('/admin/movies', adminAuthToken, adminController.moviesList);
 
 // Admin -> Movie
-router.get('/admin/movie/add', adminAuthToken, adminController.getCrawlMoviePage);
-router.post('/admin/movie/crawl', adminAuthToken, adminController.crawlMovie);
+router.get('/admin/movie/view/:id', adminAuthToken, adminController.viewMovie);
+router.get('/admin/movie/add', adminAuthToken, adminController.getAddMoviePage);
+router.get('/admin/movie/edit/:id', adminAuthToken, adminController.getEditMoviePage);
+router.post('/admin/movie/edit/:id', adminAuthToken, adminController.editMovie);
+router.post('/admin/movie/delete/:id', adminAuthToken, adminController.deleteMovie);
+router.post('/admin/movie/leech/:slug', adminAuthToken, adminController.addMovie);
+
+// Admin -> Episode
+router.get('/admin/:id/episode', adminAuthToken, adminController.episodesList);
+router.post('/admin/:id/episode/sync', adminAuthToken, adminController.leechEpisodes);
+router.get('/admin/:slug/episodes', adminAuthToken, adminController.episodesList2);
 
 // Admin -> User
 router.get('/admin/users', adminAuthToken, adminController.usersList);

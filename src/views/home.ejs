@@ -1,6 +1,8 @@
 <div class="row g-3">
     <div class="d-flex justify-content-between align-items-center mb-2">
-        <h5 class="mb-0">Mới cập nhật</h5>
+        <h5 class="mb-0">
+            <%= tag %>
+        </h5>
         <div>
         </div>
     </div>
@@ -30,7 +32,7 @@
 
 <!-- Pagination -->
 <div class="pagination d-flex align-items-center justify-content-center mt-4 gap-2">
-    <a class="btn btn-sm btn-secondary" href="?page=1">Đầu</a>
+    <a class="btn btn-sm btn-secondary" href="?page=1<%= query ? '&q=' + encodeURIComponent(query) : '' %>">Đầu</a>
     <div id="pagination" data-total-pages="<%= totalPages %>"></div>
     <% pages.forEach(p=> { %>
         <% if (p===currentPage) { %>
@@ -38,12 +40,14 @@
                 <%= p %>
             </span>
             <% } else { %>
-                <a class="btn btn-sm btn-dark" href="?page=<%= p %>">
+                <a class="btn btn-sm btn-dark"
+                    href="?page=<%= p %><%= query ? '&q=' + encodeURIComponent(query) : '' %>">
                     <%= p %>
                 </a>
                 <% } %>
                     <% }) %>
-                        <a class="btn btn-sm btn-secondary" href="?page=<%= totalPages %>">Cuối</a>
+                        <a class="btn btn-sm btn-secondary"
+                            href="?page=<%= totalPages %><%= query ? '&q=' + encodeURIComponent(query) : '' %>">Cuối</a>
 
                         <input type="number" id="goPage" min="1" max="<%= totalPages %>" placeholder="Nhập page cần đến"
                             style="width: 120px; height: 32px;">
@@ -51,4 +55,18 @@
                         <button class="btn btn-sm btn-danger" onclick="goToPage()">GO</button>
 </div>
 
-<script src="/js/paginate.js"></script>
+<script>
+    const totalPages = parseInt(document.getElementById('pagination').dataset.totalPages);
+
+    function goToPage() {
+        const page = parseInt(document.getElementById('goPage').value);
+        if (page && page >= 1 && page <= totalPages) {
+            const q = "<%= query || '' %>";
+            let url = `?page=${page}`;
+            if (q) url += `&q=${encodeURIComponent(q)}`;
+            window.location.href = url;
+        } else {
+            alert("Vui lòng nhập số trang hợp lệ!");
+        }
+    }
+</script>

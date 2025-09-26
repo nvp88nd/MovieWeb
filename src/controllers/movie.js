@@ -1,6 +1,8 @@
 const e = require('express');
 const db = require('../models');
 const paginate = require('../helper/paginate');
+const { or } = require('sequelize');
+const dayjs = require('../utils/dayjs');
 
 exports.movieInfo = async (req, res) => {
     const { slug } = req.params;
@@ -18,11 +20,6 @@ exports.movieInfo = async (req, res) => {
             order: [['id', 'ASC']]
         });
 
-        const comments = await db.Comment.findAll({
-            where: { movie_id: movie.id },
-            include: [db.User]
-        });
-
         const isSaved = req.user && await db.SavedMovie.findOne({
             where: { user_id: req.user.id, movie_id: movie.id }
         });
@@ -31,13 +28,11 @@ exports.movieInfo = async (req, res) => {
             title: `${movie.title}`,
             movie,
             episodes,
-            comments,
             user: req.user || null,
-            isSaved
+            isSaved: isSaved ? true : false
         });
     } catch (err) {
-        req.flash('error_msg', err.message || 'Lỗi khi tải trang phim');
-        res.redirect('/');
+        res.status(500).render('error', { title: err.message || 'Lỗi khi tải trang phim' });
     }
 }
 
@@ -138,5 +133,70 @@ exports.favorites = async (req, res) => {
     } catch (err) {
         req.flash('error_msg', err.message || 'Lỗi khi tải trang phim đã lưu');
         res.redirect('/');
+    }
+};
+
+exports.postComment = async (req, res) => {
+    const { movie_id, content } = req.body;
+
+    if (!movie_id || !content) {
+        return res.status(400).json({ success: false, message: 'Thiếu thông tin' });
+    }
+
+    try {
+        const comment = await db.Comment.create({
+            user_id: req.user.id,
+            movie_id,
+            content
+        });
+
+        return res.status(201).json({
+            success: true,
+            comment: {
+                id: comment.id,
+                content: comment.content,
+                created_at: comment.created_at,
+                user: {
+                    id: req.user.id,
+                    username: req.user.username
+                }
+            }
+
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message || 'Lỗi khi gửi bình luận' });
+    }
+};
+
+exports.getComments = async (req, res) => {
+    const movieId = req.query.movie_id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5;
+
+    try {
+        const { rows: comments } = await paginate(db.Comment, page, limit, {
+            where: { movie_id: movieId },
+            include: [{
+                model: db.User,
+                attributes: ['id', 'username']
+            }],
+            order: [['created_at', 'DESC']]
+        });
+        const formattedComments = comments.map(c => {
+            const plain = c.toJSON();
+            return {
+                ...plain,
+                timeAgo: dayjs(plain.created_at).fromNow()
+            };
+        });
+        const commentsCount = await db.Comment.count({ where: { movie_id: movieId } });
+
+        return res.json({
+            success: true,
+            comments: formattedComments,
+            totalComments: commentsCount
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message || 'Lỗi khi tải bình luận' });
     }
 };

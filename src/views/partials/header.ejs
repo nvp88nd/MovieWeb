@@ -3,7 +3,11 @@
         <a href="/" class="text-decoration-none">
             <h1 class="text-primary fw-bold mb-2 mb-md-0">My<span class="text-danger">Movie</span></h1>
         </a>
-        <input type="text" class="form-control w-100 mx-5 mb-2" placeholder="Nhập từ khóa...">
+        <form action="/search" method="get" class="d-flex w-100 mx-5 mb-2">
+            <input type="text" name="q" class="form-control me-2" placeholder="Nhập từ khóa..."
+                value="<%= typeof query !== 'undefined' ? query : '' %>" required>
+            <button class="btn btn-secondary"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
         <div class="dropdown">
             <button class="nav-link text-dark dropdown-toggle me-4 btn-dropdown text-white" type="button"
                 id="accountDropdown" data-bs-toggle="dropdown">

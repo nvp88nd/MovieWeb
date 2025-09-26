@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <%= title %>
+    </h1>
+</div>
+<%- include('../partials/messages') %>
+    <div class="table-responsive">
+        <table class="table table-striped" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th style="width: 30px;">#</th>
+                    <th style="width: 120px;">Phim</th>
+                    <th style="width: 120px;">Server Name</th>
+                    <th style="min-width: 100px;">Nguồn phim</th>
+                    <th style="width: 120px;">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        <%= movie.title %>
+                    </td>
+                    <td>
+                        <% if (episodes && episodes.length> 0) { %>
+                            <%= episodes[0].server_name %>
+                                <% } %>
+                    </td>
+                    <td>
+                        <% episodes.forEach((episode,index)=> { %>
+                            Tập <%= episode.episode_name %>
+                                <input type="text" class="form-control form-control-sm mt-1"
+                                    value="<%= episode.video_url %>">
+                                <% }) %>
+                    </td>
+                    <td>
+                        <form action="/admin/<%= movie.id %>/episode/sync" method="POST">
+                            <button type="submit" class="btn btn-success btn-sm">Đồng bộ tập phim</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>

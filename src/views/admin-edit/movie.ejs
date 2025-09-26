@@ -1,0 +1,98 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Chỉnh sửa phim</h2>
+    <%- include('../partials/messages') %>
+
+        <form action="/admin/movie/edit/<%= movie.id %>" method="POST">
+            <!-- Tên phim -->
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên phim</label>
+                <input type="text" class="form-control" id="name" name="name" value="<%= movie.title %>" required>
+            </div>
+
+            <!-- Tên gốc -->
+            <div class="mb-3">
+                <label for="origin_name" class="form-label">Tên gốc</label>
+                <input type="text" class="form-control" id="origin_name" name="origin_name"
+                    value="<%= movie.origin_name %>">
+            </div>
+
+            <!-- Năm -->
+            <div class="mb-3">
+                <label for="year" class="form-label">Năm</label>
+                <input type="number" class="form-control" id="year" name="year" value="<%= movie.year %>">
+            </div>
+
+            <!-- Poster URL -->
+            <div class="mb-3">
+                <label for="poster_url" class="form-label">Poster URL</label>
+                <input type="text" class="form-control" id="poster_url" name="poster_url"
+                    value="<%= movie.poster_url %>">
+            </div>
+
+            <!-- Thumb URL -->
+            <div class="mb-3">
+                <label for="thumb_url" class="form-label">Thumb URL</label>
+                <input type="text" class="form-control" id="thumb_url" name="thumb_url" value="<%= movie.thumb_url %>">
+            </div>
+
+            <!-- Mô tả -->
+            <div class="mb-3">
+                <label for="content" class="form-label">Mô tả</label>
+                <textarea class="form-control" id="content" name="content" rows="4"><%= movie.description %></textarea>
+            </div>
+
+            <!-- Trạng thái -->
+            <div class="mb-3">
+                <label for="status" class="form-label">Trạng thái</label>
+                <select class="form-select" id="status" name="status">
+                    <option value="completed" <%=movie.status==='completed' ? 'selected' : '' %>>Hoàn tất</option>
+                    <option value="ongoing" <%=movie.status==='ongoing' ? 'selected' : '' %>>Đang chiếu</option>
+                </select>
+            </div>
+
+            <!-- Thể loại -->
+            <div class="mb-3">
+                <label class="form-label">Thể loại</label>
+                <div class="row">
+                    <% genres.forEach((g, i)=> { %>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="category[]" value="<%= g.name %>"
+                                    id="genre_<%= g.id %>" <%=movie.Genres.some(mg=> mg.slug === g.slug) ? 'checked' :
+                                ''
+                                %>>
+                                <label class="form-check-label" for="genre_<%= g.id %>">
+                                    <%= g.name %>
+                                </label>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+
+
+            <!-- Quốc gia -->
+            <div class="mb-3">
+                <label class="form-label">Quốc gia</label>
+                <div class="row">
+                    <% countries.forEach(c=> { %>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="country[]" value="<%= c.name %>"
+                                    id="country_<%= c.id %>" <%=movie.Countries.some(mc=> mc.slug === c.slug) ?
+                                'checked' :
+                                '' %>>
+                                <label class="form-check-label" for="country_<%= c.id %>">
+                                    <%= c.name %>
+                                </label>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+
+            <!-- Nút submit -->
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            <a href="/admin/movies" class="btn btn-secondary">Hủy</a>
+        </form>
+</div>

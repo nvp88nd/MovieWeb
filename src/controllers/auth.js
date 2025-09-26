@@ -24,7 +24,7 @@ exports.login = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 60 * 60 * 1000 // 1 giờ
+            maxAge: 60 * 60 * 1000 * 10 // 10 giờ
         });
         res.redirect('/');
     } catch (error) {

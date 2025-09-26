@@ -4,76 +4,133 @@
     </h1>
     <a href="/admin/movie/add" class="btn btn-success">Thêm phim</a>
 </div>
-
-<div class="table-responsive">
-    <table class="table table-striped" style="width: 100%;">
-        <thead>
-            <tr>
-                <th style="width: 50px;">#</th>
-                <th style="min-width: 100px;">Tên phim</th>
-                <th style="width: 80px;">Thể loại</th>
-                <th style="width: 80px;">Quốc gia</th>
-                <th style="width: 130px;">Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% movies.forEach((movie,index)=> { %>
+<%- include('../partials/messages') %>
+    <div class="table-responsive">
+        <table class="table table-striped" style="width: 100%;">
+            <thead>
                 <tr>
-                    <td>
-                        <%= index + 1 %>
-                    </td>
-                    <td>
-                        <%= movie.title %>
-                    </td>
-                    <td>
-                        <div class="d-flex flex-column">
-                            <% movie.Genres.forEach((genre)=> { %>
-                                <span class="badge bg-secondary mb-1">
-                                    <%= genre.name %>
-                                </span>
-                                <% }) %>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="d-flex flex-column">
-                            <% movie.Countries.forEach((country)=> { %>
-                                <span class="badge bg-secondary mb-1">
-                                    <%= country.name %>
-                                </span>
-                                <% }) %>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="/admin/movie/edit/<%= movie.id %>" class="btn btn-primary btn-sm">Sửa</a>
-                        <form action="/admin/movie/delete/<%= movie.id %>" method="POST" style="display:inline;">
-                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-                        </form>
-                    </td>
+                    <th style="width: 50px;">#</th>
+                    <th style="min-width: 100px;">Phim</th>
+                    <th style="width: 80px;">Thể loại</th>
+                    <th style="width: 80px;">Quốc gia</th>
+                    <th style="width: 130px;">Hành động</th>
                 </tr>
-                <% }) %>
-        </tbody>
-    </table>
-</div>
-
-<div class="pagination d-flex align-items-center justify-content-center mt-4 gap-2">
-    <a class="btn btn-sm btn-secondary" href="?page=1">Đầu</a>
-    <div id="pagination" data-total-pages="<%= totalPages %>"></div>
-    <% pages.forEach(p=> { %>
-        <% if (p===currentPage) { %>
-            <span class="btn btn-sm btn-success">
-                <%= p %>
-            </span>
-            <% } else { %>
-                <a class="btn btn-sm btn-dark" href="?page=<%= p %>">
-                    <%= p %>
-                </a>
-                <% } %>
+            </thead>
+            <tbody>
+                <% movies.forEach((movie,index)=> { %>
+                    <tr>
+                        <td>
+                            <%= index + 1 %>
+                        </td>
+                        <td>
+                            <img src="<%= movie.thumb_url %>" alt="" class="img-fluid"
+                                style="height: 100px; width: 70px; object-fit: cover;">
+                            <%= movie.title %>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column">
+                                <% movie.Genres.forEach((genre)=> { %>
+                                    <span class="badge bg-secondary mb-1">
+                                        <%= genre.name %>
+                                    </span>
+                                    <% }) %>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column">
+                                <% movie.Countries.forEach((country)=> { %>
+                                    <span class="badge bg-secondary mb-1">
+                                        <%= country.name %>
+                                    </span>
+                                    <% }) %>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-sm btn-detail" data-id="<%= movie.id %>">Chi
+                                tiết
+                            </button>
+                            <a href="/admin/<%= movie.id %>/episode" class="btn btn-warning btn-sm">Xem tập
+                                phim</a>
+                            <a href="/admin/movie/edit/<%= movie.id %>" class="btn btn-primary btn-sm">Sửa</a>
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal" data-id="<%= movie.id %>"
+                                data-url="/admin/movie/delete/<%= movie.id %>" data-name="<%= movie.title %>">
+                                Xóa
+                            </button>
+                        </td>
+                    </tr>
                     <% }) %>
-                        <a class="btn btn-sm btn-secondary" href="?page=<%= totalPages %>">Cuối</a>
+            </tbody>
+        </table>
+    </div>
 
-                        <input type="number" id="goPage" min="1" max="<%= totalPages %>" placeholder="Nhập page cần đến"
-                            style="width: 120px; height: 32px;">
-                        <button class="btn btn-sm btn-danger" onclick="goToPage()">GO</button>
-</div>
+    <%- include('../partials/pagination', { totalPages, currentPage, pages }) %>
+        <%- include('../partials/formDelete') %>
 
-<script src="/js/paginate.js"></script>
+            <!-- Modal -->
+            <div class="modal fade" id="movieDetailModal" tabindex="-1" aria-labelledby="movieDetailModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Chi tiết phim</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                        </div>
+                        <div class="modal-body row">
+                            <div class="col-md-3">
+                                <img src="" alt="" class="img-fluid object-fit-cover" id="detailThumb">
+                            </div>
+                            <div class="col-md-9">
+                                <p><strong>Tên phim:</strong> <span id="detailName"></span></p>
+                                <p><strong>Tên gốc:</strong> <span id="detailOriginName"></span></p>
+                                <p><strong>Trạng thái:</strong> <span id="detailStatus"></span></p>
+                                <p><strong>Số tập:</strong> <span id="detailEpisodes"></span></p>
+                                <p><strong>Năm phát hành:</strong> <span id="detailYear"></span></p>
+                                <p><strong>Thể loại:</strong> <span id="detailCategory"></span></p>
+                                <p><strong>Quốc gia:</strong> <span id="detailCountry"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const buttons = document.querySelectorAll('.btn-detail');
+                    buttons.forEach(button => {
+                        button.addEventListener('click', async function () {
+                            const movieId = this.getAttribute('data-id');
+                            try {
+                                const response = await fetch(`/admin/movie/view/${movieId}`, {
+                                    method: 'GET',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                });
+                                if (response.status === 500) {
+                                    alert('Đã xảy ra lỗi khi tải chi tiết phim.');
+                                    return;
+                                }
+                                if (!response.ok) {
+                                    alert('Không thể tải chi tiết phim.');
+                                    return;
+                                }
+                                const movie = await response.json();
+                                document.getElementById('detailThumb').src = movie.thumb_url || '';
+                                document.getElementById('detailName').textContent = movie.title || 'Không rõ';
+                                document.getElementById('detailOriginName').textContent = movie.origin_name || 'Không rõ';
+                                document.getElementById('detailStatus').textContent = movie.status === 'ongoing' ? 'Đang chiếu' : 'Chưa rõ';
+                                document.getElementById('detailEpisodes').textContent = movie.Episodes.length || 'Chưa rõ';
+                                document.getElementById('detailYear').textContent = movie.year || 'Không rõ';
+                                document.getElementById('detailCategory').textContent = movie.Genres && movie.Genres.length > 0 ? movie.Genres.map(g => g.name).join(', ') : 'Chưa có';
+                                document.getElementById('detailCountry').textContent = movie.Countries && movie.Countries.length > 0 ? movie.Countries.map(c => c.name).join(', ') : 'Chưa có';
+                                const movieDetailModal = new bootstrap.Modal(document.getElementById('movieDetailModal'));
+                                movieDetailModal.show();
+                            } catch (error) {
+                                console.error('Error fetching movie details:', error);
+                                alert('Đã xảy ra lỗi khi tải chi tiết phim.');
+                            }
+                        });
+                    });
+                });
+            </script>
