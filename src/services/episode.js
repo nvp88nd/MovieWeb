@@ -1,6 +1,7 @@
 const { where } = require('sequelize');
 const db = require('../models');
 const axios = require('axios');
+const movieService = require('./movie');
 
 exports.syncEpisodes = async (slug, movieId) => {
     const detailUrl = `https://ophim1.com/phim/${slug}`;
@@ -8,6 +9,11 @@ exports.syncEpisodes = async (slug, movieId) => {
         const response = await axios.get(detailUrl);
         let totalEpisodes = 0;
         const episodesData = response.data.episodes;
+
+        // Đồng bộ thể loại, quốc gia
+        await movieService.updateMovieV2(movieId, response.data.movie);
+
+        // Đồng bộ tập phim
         for (const server of episodesData) {
             const serverName = server.server_name || 'Unknown Server';
             for (const ep of server.server_data) {
@@ -55,4 +61,18 @@ exports.syncMovieEpisodes = async (movieId, req, res) => {
 
 exports.checkMovieExist = async (slug) => {
     return await db.Movie.findOne({ where: { slug: slug } });
+}
+
+exports.syncAllMovies = async () => {
+    try {
+        const movies = await db.Movie.findAll({ attributes: ['slug', 'id'] });
+        for (const movie of movies) {
+            await this.syncEpisodes(movie.slug, movie.id);
+        }
+        console.log('✅ Đã đồng bộ hóa tất cả phim.');
+        return true;
+    } catch (error) {
+        console.error('❌ Lỗi khi đồng bộ hóa tất cả phim:', error.message);
+        return false;
+    }
 }

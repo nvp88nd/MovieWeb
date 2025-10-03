@@ -13,6 +13,7 @@ const adminAuthToken = require('../middlewares/adminAuthToken');
 // Home controller routes
 router.get('/', homeController.homePage);
 router.get('/search', homeController.searchMovies);
+router.get('/movies', homeController.filterMovies);
 
 // Movie controller routes
 router.get('/movie/:slug', movieController.movieInfo);
@@ -60,6 +61,7 @@ router.get('/admin/movie/edit/:id', adminAuthToken, adminController.getEditMovie
 router.post('/admin/movie/edit/:id', adminAuthToken, adminController.editMovie);
 router.post('/admin/movie/delete/:id', adminAuthToken, adminController.deleteMovie);
 router.post('/admin/movie/leech/:slug', adminAuthToken, adminController.addMovie);
+router.post('/admin/movie/updateall', adminAuthToken, adminController.updateAllMovie);
 
 // Admin -> Episode
 router.get('/admin/:id/episode', adminAuthToken, adminController.episodesList);

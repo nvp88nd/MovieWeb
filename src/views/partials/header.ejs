@@ -1,4 +1,4 @@
-<header class="mb-4 pt-3">
+<!-- <header class="mb-4 pt-3">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-2">
         <a href="/" class="text-decoration-none">
             <h1 class="text-primary fw-bold mb-2 mb-md-0">My<span class="text-danger">Movie</span></h1>
@@ -37,6 +37,88 @@
                     <% } %>
         </div>
 
+    </div>
+    <hr />
+</header> -->
+
+<header class="mb-4 pt-3">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-2">
+        <a href="/" class="text-decoration-none">
+            <h1 class="text-primary fw-bold mb-2 mb-md-0">
+                My<span class="text-danger">Movie</span>
+            </h1>
+        </a>
+
+        <form action="/search" method="get" class="d-flex w-100 mx-5 mb-2">
+            <input type="text" name="q" class="form-control me-2" placeholder="Nhập từ khóa..."
+                value="<%= typeof query !== 'undefined' ? query : '' %>" required>
+            <button class="btn btn-secondary">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+        <div class="d-flex align-items-center gap-2">
+            <div class="dropdown me-2">
+                <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Thể loại
+                </button>
+                <ul class="dropdown-menu dropdown-scroll">
+                    <% if (genres && genres.length) { %>
+                        <% genres.forEach(g=> { %>
+                            <li><a class="dropdown-item" href="/movies?genre=<%= g.slug %>">
+                                    <%= g.name %>
+                                </a></li>
+                            <% }) %>
+                                <% } else { %>
+                                    <li><span class="dropdown-item text-muted">Không có dữ liệu</span></li>
+                                    <% } %>
+                </ul>
+            </div>
+
+            <div class="dropdown">
+                <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Quốc gia
+                </button>
+                <ul class="dropdown-menu dropdown-scroll">
+                    <% if (countries && countries.length) { %>
+                        <% countries.forEach(c=> { %>
+                            <li><a class="dropdown-item" href="/movies?country=<%= c.slug %>">
+                                    <%= c.name %>
+                                </a></li>
+                            <% }) %>
+                                <% } else { %>
+                                    <li><span class="dropdown-item text-muted">Không có dữ liệu</span></li>
+                                    <% } %>
+                </ul>
+            </div>
+
+            <div class="dropdown">
+                <button class="btn btn-dark dropdown-toggle" type="button" id="accountDropdown"
+                    data-bs-toggle="dropdown">
+                    Tài khoản
+                </button>
+
+                <% if (user) { %>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/profile">Hồ sơ</a></li>
+                        <% if (user.role==='admin' ) { %>
+                            <li><a class="dropdown-item" href="/admin/dashboard">Quản lý</a></li>
+                            <% } %>
+                                <li><a class="dropdown-item" href="/favorites">Phim đã lưu</a></li>
+                                <li><a class="dropdown-item" href="/changePassword">Đổi mật khẩu</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+                    </ul>
+                    <% } else { %>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/login">Đăng nhập</a></li>
+                            <li><a class="dropdown-item" href="/register">Đăng ký</a></li>
+                        </ul>
+                        <% } %>
+            </div>
+        </div>
     </div>
     <hr />
 </header>

@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 const jwt = require('jsonwebtoken');
 const flash = require('connect-flash');
+const loadFilters = require('./middlewares/loadFilters');
 
 
 // Cấu hình view engine
@@ -45,6 +46,7 @@ app.use((req, res, next) => {
     res.locals.error_msg = req.flash("error_msg");
     next();
 });
+app.use(loadFilters);
 
 // Routes
 const webRoutes = require('./routes/web');

@@ -55,6 +55,23 @@ exports.viewMovie = async (req, res) => {
     }
 }
 
+exports.updateAllMovie = async (req, res) => {
+    try {
+        const updated = await episodeService.syncAllMovies();
+        if (updated) {
+            req.flash('success_msg', 'Cập nhật tất cả phim thành công');
+            return res.redirect('/admin/movies');
+        } else {
+            req.flash('error_msg', 'Cập nhật tất cả phim thất bại. Vui lòng thử lại sau!');
+            return res.redirect('/admin/movies');
+        }
+
+    } catch (error) {
+        req.flash('error_msg', error.message || 'Thêm phim thất bại');
+        res.redirect('/admin/movie/add');
+    }
+}
+
 exports.getAddMoviePage = async (req, res) => {
     const url = `https://ophim1.com/danh-sach/phim-moi-cap-nhat?page=${req.query.page || 1}`;
     try {
@@ -65,7 +82,7 @@ exports.getAddMoviePage = async (req, res) => {
         const pages = getPageNumbers(pagination.currentPage, pagination.totalPages);
         const pathImage = 'https://img.ophim.live/uploads/movies/';
         renderAdmin(res, 'admin-add/movie', {
-            title: 'Thêm phim mới',
+            title: 'Phim mới cập nhật trên Ophim',
             items: response.data.items || [],
             pagination: response.data.pagination || {},
             pages,
@@ -73,7 +90,7 @@ exports.getAddMoviePage = async (req, res) => {
         });
     } catch (error) {
         renderAdmin(res, 'admin-add/movie', {
-            title: 'Thêm phim mới',
+            title: 'Phim mới cập nhật trên Ophim',
             items: [],
             pagination: {},
             pages: []

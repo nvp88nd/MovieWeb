@@ -1,9 +1,15 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>
+    <h1 class="mb-0">
         <%= title %>
     </h1>
-    <a href="/admin/movie/add" class="btn btn-success">Thêm phim</a>
+    <div class="d-flex gap-2">
+        <a href="/admin/movie/add" class="btn btn-success">Thêm phim</a>
+        <form action="/admin/movie/updateall" method="POST" class="m-0">
+            <button type="submit" class="btn btn-primary">Cập nhật tất cả</button>
+        </form>
+    </div>
 </div>
+
 <%- include('../partials/messages') %>
     <div class="table-responsive">
         <table class="table table-striped" style="width: 100%;">

@@ -64,9 +64,9 @@ async function syncAllMovies() {
         for (const movie of movies) {
             await syncEpisodes(movie.slug);
         }
-        console.log('✅ Đã đồng bộ hóa tất cả các tập phim.');
+        console.log('✅ Đã đồng bộ hóa tất cả phim.');
     } catch (error) {
-        console.error('❌ Lỗi khi đồng bộ hóa tất cả các tập phim:', error.message);
+        console.error('❌ Lỗi khi đồng bộ hóa tất cả phim:', error.message);
     }
 }
 
