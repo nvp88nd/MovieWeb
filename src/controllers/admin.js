@@ -27,14 +27,14 @@ exports.dashboard = async (req, res) => {
 exports.moviesList = async (req, res) => {
     render(req, res, 'Danh sách phim', db.Movie, 'admin/movies-list', 10, {
         include: [db.Genre, db.Country, db.Episode],
-        order: [['created_at', 'DESC']]
+        order: [['updated_at', 'DESC']]
     });
 };
 
 exports.usersList = async (req, res) => {
     render(req, res, 'Danh sách người dùng', db.User, 'admin/users-list', 10, {
         include: [],
-        order: [['created_at', 'ASC']]
+        order: [['username', 'ASC']]
     });
 };
 
